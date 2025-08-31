@@ -3,8 +3,8 @@
   "module": "index.ts",
   "type": "module",
   "private": true,
-  "exports":{
-    "./S3":"./index.ts"
+  "exports": {
+    "./S3": "./index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"

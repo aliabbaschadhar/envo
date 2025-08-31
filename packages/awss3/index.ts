@@ -17,7 +17,7 @@ export async function copyS3Folder(
   try {
     // List all the objects in the source folder
     const listParams = {
-      Bucket: process.env.Bucket ?? "",
+      Bucket: process.env.BUCKET ?? "",
       Prefix: sourcePrefix,
       ContinuationToken: continuationToken
     }
@@ -36,8 +36,8 @@ export async function copyS3Folder(
       let destinationKey = object.Key.replace(sourcePrefix, destinationPrefix)
 
       let copyParams = {
-        Bucket: process.env.Bucket ?? "",
-        CopySource: `${process.env.Bucket}/${object.Key}`,
+        Bucket: process.env.BUCKET ?? "",
+        CopySource: `${process.env.BUCKET}/${object.Key}`,
         Key: destinationKey
       }
 
@@ -58,7 +58,7 @@ export async function copyS3Folder(
 
 export const saveToS3 = async (key: string, filePath: string, content: string): Promise<void> => {
   const params = {
-    Bucket: process.env.Bucket ?? "",
+    Bucket: process.env.BUCKET ?? "",
     Key: `${key}${filePath}`,
     Body: content
   }
