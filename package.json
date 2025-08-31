@@ -1,5 +1,5 @@
 {
-  "name": "Excalidraw",
+  "name": "envo",
   "private": true,
   "scripts": {
     "build": "turbo run build",
