@@ -8,6 +8,10 @@ const port = process.env.PORT || 3001
 app.use(cors())
 app.use(express.json())
 
+//health check endpoint
+app.get("/health", (req, res) => {
+  res.send("OK")
+})
 
 app.post("/project", async (req, res) => {
   //Hit the DB to ensure this slug isn't taken
