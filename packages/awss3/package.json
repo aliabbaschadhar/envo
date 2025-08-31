@@ -1,0 +1,18 @@
+{
+  "name": "@repo/awss3",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "exports":{
+    "./S3":"./index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.879.0"
+  }
+}
