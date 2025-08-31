@@ -1,4 +1,7 @@
-import { S3Client, PutObjectCommand, ListObjectsV2Command, CopyObjectCommand, } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, ListObjectsV2Command, CopyObjectCommand, GetObjectCommand, } from "@aws-sdk/client-s3";
+import fs from "fs"
+import path from "path"
+
 
 const s3 = new S3Client({
   region: "auto", // only for r2
@@ -29,8 +32,8 @@ export async function copyS3Folder(
     // copy each object to the new location
     // We are doing it parallelly here, using promise.all()
 
-    await Promise.all(listedObjects.Contents.map(async (object) => {
-      if (!object.Key) return; // Key==> Means whole path of object in bucket 
+    for (const object of listedObjects.Contents) {
+      if (!object.Key) continue; // Key==> Means whole path of object in bucket 
       // Key==> base/base-go/main.go
 
       let destinationKey = object.Key.replace(sourcePrefix, destinationPrefix)
@@ -45,7 +48,7 @@ export async function copyS3Folder(
 
       await s3.send(new CopyObjectCommand(copyParams));
       console.log(`Copied ${object.Key} to ${destinationKey}`)
-    }))
+    }
 
     // Check if the list was truncated and continue copying if necessary
     if (listedObjects.IsTruncated) {
@@ -64,4 +67,37 @@ export const saveToS3 = async (key: string, filePath: string, content: string): 
   }
 
   await s3.send(new PutObjectCommand(params));
+}
+
+export const fetchS3Folder = async (key: string, localPath: string): Promise<void> => {
+  const params = {
+    Bucket: process.env.BUCKET ?? "",
+    Prefix: key
+  }
+
+  const response = await s3.send(new ListObjectsV2Command(params))
+
+  if (response.Contents) {
+    for (const file of response.Contents) {
+      const fileKey = file.Key // file path
+      if (fileKey) {
+        const params = {
+          Bucket: process.env.BUCKET ?? "",
+          Key: fileKey
+        }
+        const data = await s3.send(new GetObjectCommand(params))
+        if (data.Body) {
+          const fileDataStream = data.Body as NodeJS.ReadableStream;
+          const chunks: Buffer[] = [];
+          for await (const chunk of fileDataStream) {
+            chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+          }
+          const fileBuffer = Buffer.concat(chunks);
+          const filePath = `${localPath}/${fileKey.replace(key, "")}`;
+          await fs.promises.writeFile(filePath, fileBuffer);
+        }
+      }
+
+    }
+  }
 }
