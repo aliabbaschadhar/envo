@@ -9,10 +9,10 @@ COPY ./turbo.json ./
 
 RUN bun install
 
-COPY ./apps/runner-service ./apps/runner-service
+COPY ./apps/orchestrator ./apps/orchestrator
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 3002
 
 CMD [ "bun","run","src/index.ts" ]

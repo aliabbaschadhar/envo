@@ -3,16 +3,16 @@ FROM oven/bun:1-alpine
 WORKDIR /usr/src/app
 
 COPY ./packages ./packages
-COPY ./bun.lock ./
+COPY ./bun.lock ./bun.lock
 COPY ./package.json ./
-COPY ./turbo.json ./
+COPY ./turbo.json ./turbo.json
 
 RUN bun install
 
-COPY ./apps/runner-service ./apps/runner-service
+COPY ./apps/init-service ./apps/init-service
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 3001
 
 CMD [ "bun","run","src/index.ts" ]
