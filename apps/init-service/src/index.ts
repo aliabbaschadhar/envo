@@ -3,7 +3,7 @@ import cors from "cors"
 import { copyS3Folder } from "@repo/awss3/S3"
 
 const app = express()
-const port = process.env.PORT || 3001
+const port = process.env.PORT || 3000
 
 app.use(cors())
 app.use(express.json())
