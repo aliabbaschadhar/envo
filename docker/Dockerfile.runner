@@ -1,0 +1,16 @@
+FROM oven/bun:1-alpine
+
+WORKDIR /usr/src/app
+
+COPY ./packages ./packages
+COPY ./bun.lock ./
+COPY ./package.json ./
+COPY ./turbo.json ./
+
+COPY ./apps/runner-service ./apps/runner-service
+
+COPY . .
+
+EXPOSE 3000
+
+CMD [ "bun","run","src/index.ts" ]
