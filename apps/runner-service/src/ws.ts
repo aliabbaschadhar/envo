@@ -1,7 +1,6 @@
 import { Server, type Socket } from "socket.io";
 import { type Server as HttpServer } from "http"
 import { saveToS3 } from "@repo/awss3/S3"
-import path from "path"
 import { fetchDir, fetchFileContent, saveFile } from "./file";
 import { TerminalManager } from "./pty";
 
@@ -36,6 +35,7 @@ export function initWs(httpServer: HttpServer) {
 
 function initHandlers(socket: Socket, replId: string) {
   socket.on("disconnect", () => {
+    //TODO: the pod should self destroy itself
     console.log("user disconnected");
   })
 

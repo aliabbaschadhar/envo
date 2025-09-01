@@ -22,7 +22,8 @@ export class TerminalManager {
       cwd: `/${replId}`
     });
 
-    term.onData((data: string) => onData(data, term.pid))
+    term.onData((data: string) => onData(data, term.pid));
+
     this.sessions[id] = {
       terminal: term,
       replId: replId
